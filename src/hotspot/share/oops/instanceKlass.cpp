@@ -901,6 +901,10 @@ bool InstanceKlass::link_class_impl(TRAPS) {
         need_init_table = false;
       }
       if (need_init_table) {
+        {
+          ResourceMark rm(THREAD);
+          printf("Initializing the vtable of %s\n", _name->as_C_string());
+        }
         vtable().initialize_vtable_and_check_constraints(CHECK_false);
         itable().initialize_itable_and_check_constraints(CHECK_false);
       }

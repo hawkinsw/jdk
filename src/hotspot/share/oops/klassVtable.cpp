@@ -147,6 +147,12 @@ int klassVtable::initialize_from_super(Klass* super) {
     superVtable.verify(tty, true);
 #endif
     superVtable.copy_vtable_to(table());
+
+    {
+      ResourceMark rm;
+      printf("Initializing the vtable of %s from %s\n", klass()->internal_name(), super->internal_name());
+    }
+
     if (log_develop_is_enabled(Trace, vtables)) {
       ResourceMark rm;
       log_develop_trace(vtables)("copy vtable from %s to %s size %d",
@@ -207,6 +213,11 @@ void klassVtable::initialize_vtable(GrowableArray<InstanceKlass*>* supers) {
         put_method_at(mh(), initialized);
         mh->set_vtable_index(initialized); // set primary vtable index
         initialized++;
+        ResourceMark rm;
+        printf("Added new vtable entry for %s\n", methods->at(i)->name()->as_C_string());
+      } else {
+        ResourceMark rm;
+        printf("Updated old vtable entry for %s\n", methods->at(i)->name()->as_C_string());
       }
     }
 
@@ -481,6 +492,7 @@ bool klassVtable::update_inherited_vtable(Thread* current,
       // get super_klass for method_holder for the found method
       InstanceKlass* super_klass =  super_method->method_holder();
 
+
       // Whether the method is being overridden
       bool overrides = false;
 
@@ -497,6 +509,11 @@ bool klassVtable::update_inherited_vtable(Thread* current,
         // overriding. They may also override other methods.
         if (!target_method->is_package_private()) {
           allocate_new = false;
+          ResourceMark rm(THREAD);
+          printf("Method is not package private: %s\n", target_method()->name()->as_C_string());
+        } else {
+          ResourceMark rm(THREAD);
+          printf("Method is package private: %s\n", target_method()->name()->as_C_string());
         }
 
         // Set the vtable index before the constraint check safepoint, which potentially
