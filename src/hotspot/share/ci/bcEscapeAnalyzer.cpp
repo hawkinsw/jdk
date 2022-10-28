@@ -304,6 +304,8 @@ void BCEscapeAnalyzer::invoke(StateInfo &state, Bytecodes::Code code, ciMethod* 
         || (code == Bytecodes::_invokevirtual && target->is_final_method())) {
       inline_target = target;
     } else {
+
+      tty->print_cr("Find the monomorphic target in the escape analyzer.");
       inline_target = target->find_monomorphic_target(calling_klass, callee_holder, actual_recv);
     }
   }

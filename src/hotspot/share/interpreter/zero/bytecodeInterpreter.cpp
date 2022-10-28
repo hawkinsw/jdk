@@ -2439,11 +2439,13 @@ run:
         // QQQ Need to make this as inlined as possible. Probably need to split all the bytecode cases
         // out so c++ compiler has a chance for constant prop to fold everything possible away.
 
+  tty->print_cr("I am here about to call something.");
         if (!cache->is_resolved((Bytecodes::Code)opcode)) {
           CALL_VM(InterpreterRuntime::resolve_from_cache(THREAD, (Bytecodes::Code)opcode),
                   handle_exception);
           cache = cp->entry_at(index);
         }
+
 
         istate->set_msg(call_method);
         {

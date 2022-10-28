@@ -849,6 +849,14 @@ void InterpreterRuntime::resolve_invoke(JavaThread* current, Bytecodes::Code byt
   // check if link resolution caused cpCache to be updated
   ConstantPoolCacheEntry* cp_cache_entry = last_frame.cache_entry();
   if (cp_cache_entry->is_resolved(bytecode)) return;
+  
+  if (bytecode == Bytecodes::_invokevirtual) {
+    ResourceMark mc;
+    const char *method_name = resolved_method->name_and_sig_as_C_string();
+    if (method_name != NULL) {
+      tty->print_cr("Resolve invoke (virtual): %s", method_name);
+    }
+  }
 
 #ifdef ASSERT
   if (bytecode == Bytecodes::_invokeinterface) {

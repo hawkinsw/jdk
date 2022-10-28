@@ -1201,11 +1201,16 @@ Handle SharedRuntime::find_callee_info_helper(vframeStream& vfst, Bytecodes::Cod
 
       // Adjust invocation mode according to the attached method.
       switch (bc) {
-        case Bytecodes::_invokevirtual:
+        case Bytecodes::_invokevirtual: {
           if (attached_method->method_holder()->is_interface()) {
             bc = Bytecodes::_invokeinterface;
           }
+
+    ResourceMark rm;
+    tty->print_cr("Attempting to do an invokevirtual!");
+
           break;
+                                        }
         case Bytecodes::_invokeinterface:
           if (!attached_method->method_holder()->is_interface()) {
             bc = Bytecodes::_invokevirtual;
@@ -1486,6 +1491,7 @@ methodHandle SharedRuntime::resolve_sub_helper(bool is_virtual, bool is_optimize
     callee_method->print_short_name(tty);
     tty->print_cr(" at pc: " INTPTR_FORMAT " to code: " INTPTR_FORMAT,
                   p2i(caller_frame.pc()), p2i(callee_method->code()));
+    tty->print_cr(" with size of (parameters): " INT32_FORMAT, callee_method->size_of_parameters());
   }
 #endif
 
@@ -1696,6 +1702,11 @@ JRT_BLOCK_ENTRY(address, SharedRuntime::resolve_virtual_call_C(JavaThread* curre
     callee_method = SharedRuntime::resolve_helper(true, false, CHECK_NULL);
     current->set_vm_result_2(callee_method());
   JRT_BLOCK_END
+
+  ResourceMark rm(current);
+      callee_method->print_short_name(tty);
+      tty->print_cr(" from resolve_virtual_call_C.");
+
   // return compiled code entry point after potential safepoints
   assert(callee_method->verified_code_entry() != NULL, " Jump to zero!");
   return callee_method->verified_code_entry();
@@ -1710,6 +1721,9 @@ JRT_BLOCK_ENTRY(address, SharedRuntime::resolve_opt_virtual_call_C(JavaThread* c
     callee_method = SharedRuntime::resolve_helper(true, true, CHECK_NULL);
     current->set_vm_result_2(callee_method());
   JRT_BLOCK_END
+  ResourceMark rm(current);
+      callee_method->print_short_name(tty);
+      tty->print_cr(" from resolve_virtual_call_C.");
   // return compiled code entry point after potential safepoints
   assert(callee_method->verified_code_entry() != NULL, " Jump to zero!");
   return callee_method->verified_code_entry();

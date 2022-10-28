@@ -73,6 +73,9 @@ CallGenerator* Compile::call_generator(ciMethod* callee, int vtable_index, bool 
                                        bool allow_intrinsics) {
   assert(callee != NULL, "failed method resolution");
 
+
+  tty->print_cr("call_generator");
+
   ciMethod*       caller      = jvms->method();
   int             bci         = jvms->bci();
   Bytecodes::Code bytecode    = caller->java_code_at_bci(bci);
@@ -521,6 +524,8 @@ void Parse::do_call() {
   if (bc() == Bytecodes::_invokedynamic || orig_callee->is_method_handle_intrinsic()) {
     C->set_max_node_limit(3*MaxNodeLimit);
   }
+
+  orig_callee->print_name(); tty->print_cr(" via a C1 do_call" );
 
   // uncommon-trap when callee is unloaded, uninitialized or will not link
   // bailout when too many arguments for register representation
@@ -1095,6 +1100,7 @@ ciMethod* Compile::optimize_virtual_call(ciMethod* caller, ciInstanceKlass* klas
 
   // Have the call been sufficiently improved such that it is no longer a virtual?
   if (optimized_virtual_method != NULL) {
+    optimized_virtual_method->print_short_name(tty); tty->print_cr(" from optimize virtual call.");
     callee             = optimized_virtual_method;
     call_does_dispatch = false;
   } else if (!UseInlineCaches && is_virtual && callee->is_loaded()) {
@@ -1148,10 +1154,13 @@ ciMethod* Compile::optimize_inlining(ciMethod* caller, ciInstanceKlass* klass, c
     actual_receiver_is_exact = receiver_type->klass_is_exact();
   }
 
+  tty->print_cr("Looking for monomorphic target in optimize_inlining.");
   ciInstanceKlass*   calling_klass = caller->holder();
+
   ciMethod* cha_monomorphic_target = callee->find_monomorphic_target(calling_klass, klass, actual_receiver, check_access);
 
   if (cha_monomorphic_target != NULL) {
+    cha_monomorphic_target->print_short_name(tty); tty->print_cr(" is a monomorphic match.");
     // Hardwiring a virtual.
     assert(!callee->can_be_statically_bound(), "should have been handled earlier");
     assert(!cha_monomorphic_target->is_abstract(), "");
@@ -1172,6 +1181,7 @@ ciMethod* Compile::optimize_inlining(ciMethod* caller, ciInstanceKlass* klass, c
     // In case of evolution, there is a dependence on every inlined method, since each
     // such method can be changed when its class is redefined.
     ciMethod* exact_method = callee->resolve_invoke(calling_klass, actual_receiver);
+    exact_method->print_short_name(tty); tty->print_cr(" is an exact match.");
     if (exact_method != NULL) {
       return exact_method;
     }

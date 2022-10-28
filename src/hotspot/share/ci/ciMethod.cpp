@@ -675,11 +675,13 @@ ciMethod* ciMethod::find_monomorphic_target(ciInstanceKlass* caller,
     return NULL;
   }
 
+  tty->print_cr("attempting to find a monomorphic target.");
   ciMethod* root_m = resolve_invoke(caller, actual_recv, check_access, true /* allow_abstract */);
   if (root_m == NULL) {
     // Something went wrong looking up the actual receiver method.
     return NULL;
   }
+  root_m->print_short_name(tty); tty->print_cr(" found as a monomorphic target.");
 
   // Make certain quick checks even if UseCHA is false.
 
@@ -819,6 +821,12 @@ ciMethod* ciMethod::resolve_invoke(ciKlass* caller, ciKlass* exact_receiver, boo
   if (m != get_Method()) {
     result = CURRENT_THREAD_ENV->get_method(m);
   }
+
+  ResourceMark rm;
+  stringStream st;
+  get_Method()->print_name(&st);
+  tty->print_cr("%s", st.as_string());
+
 
   if (result->is_abstract() && !allow_abstract) {
     // Don't return abstract methods because they aren't optimizable or interesting.

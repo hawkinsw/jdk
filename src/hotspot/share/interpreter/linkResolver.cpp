@@ -790,6 +790,17 @@ Method* LinkResolver::resolve_method(const LinkInfo& link_info,
     check_method_loader_constraints(link_info, resolved_method, "method", CHECK_NULL);
   }
 
+  /*
+  ResourceMark rm(THREAD);
+  stringStream ss;
+  ss.print("'");
+  Method::print_external_name(&ss, resolved_klass, link_info.name(), link_info.signature());
+  ss.print("'");
+  tty->print_cr("Invoke virtual ... %s", ss.as_string());
+  tty->print_cr(" with size of (parameters): " INTX_FORMAT, resolved_method()->size_of_parameters());
+  tty->print_cr(" with max locals: " INTX_FORMAT, resolved_method()->max_locals());
+  */
+
   return resolved_method();
 }
 

@@ -110,6 +110,7 @@ void TemplateInterpreterGenerator::generate_all() {
 
       // Reuse generated entry points
       Interpreter::_invoke_return_entry[i]          = Interpreter::_return_entry[invoke_length].entry(state);
+      tty->print_cr("invoke_return_entry: %p", Interpreter::_invoke_return_entry[i]);
       Interpreter::_invokeinterface_return_entry[i] = Interpreter::_return_entry[invokeinterface_length].entry(state);
 
       Interpreter::_invokedynamic_return_entry[i]   = generate_return_entry_for(state, invokedynamic_length, sizeof(u4));

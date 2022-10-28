@@ -69,48 +69,56 @@ void Template::generate(InterpreterMacroAssembler* masm) {
 
 void TemplateTable::call_VM(Register oop_result, address entry_point) {
   assert(_desc->calls_vm(), "inconsistent calls_vm information");
+  tty->print_cr("Calling masm");
   _masm->call_VM(oop_result, entry_point);
 }
 
 
 void TemplateTable::call_VM(Register oop_result, address entry_point, Register arg_1) {
   assert(_desc->calls_vm(), "inconsistent calls_vm information");
+  tty->print_cr("Calling masm");
   _masm->call_VM(oop_result, entry_point, arg_1);
 }
 
 
 void TemplateTable::call_VM(Register oop_result, address entry_point, Register arg_1, Register arg_2) {
   assert(_desc->calls_vm(), "inconsistent calls_vm information");
+  tty->print_cr("Calling masm");
   _masm->call_VM(oop_result, entry_point, arg_1, arg_2);
 }
 
 
 void TemplateTable::call_VM(Register oop_result, address entry_point, Register arg_1, Register arg_2, Register arg_3) {
   assert(_desc->calls_vm(), "inconsistent calls_vm information");
+  tty->print_cr("Calling masm");
   _masm->call_VM(oop_result, entry_point, arg_1, arg_2, arg_3);
 }
 
 
 void TemplateTable::call_VM(Register oop_result, Register last_java_sp, address entry_point) {
   assert(_desc->calls_vm(), "inconsistent calls_vm information");
+  tty->print_cr("Calling masm");
   _masm->call_VM(oop_result, last_java_sp, entry_point);
 }
 
 
 void TemplateTable::call_VM(Register oop_result, Register last_java_sp, address entry_point, Register arg_1) {
   assert(_desc->calls_vm(), "inconsistent calls_vm information");
+  tty->print_cr("Calling masm");
   _masm->call_VM(oop_result, last_java_sp, entry_point, arg_1);
 }
 
 
 void TemplateTable::call_VM(Register oop_result, Register last_java_sp, address entry_point, Register arg_1, Register arg_2) {
   assert(_desc->calls_vm(), "inconsistent calls_vm information");
+  tty->print_cr("Calling masm");
   _masm->call_VM(oop_result, last_java_sp, entry_point, arg_1, arg_2);
 }
 
 
 void TemplateTable::call_VM(Register oop_result, Register last_java_sp, address entry_point, Register arg_1, Register arg_2, Register arg_3) {
   assert(_desc->calls_vm(), "inconsistent calls_vm information");
+  tty->print_cr("Calling masm");
   _masm->call_VM(oop_result, last_java_sp, entry_point, arg_1, arg_2, arg_3);
 }
 

@@ -2749,6 +2749,7 @@ void TemplateTable::load_invoke_cp_cache_entry(int byte_no,
     __ movptr(itable_index, Address(cache, index, Address::times_ptr, index_offset));
   }
   __ movl(flags, Address(cache, index, Address::times_ptr, flags_offset));
+  tty->print_cr("Loading from the cache.");
 }
 
 // The registers cache and index expected to be set before call.
@@ -3682,6 +3683,7 @@ void TemplateTable::invokevirtual(int byte_no) {
   // rcx: receiver
   // rdx: flags
 
+  tty->print_cr("Going to do an invokevirtual.");
   invokevirtual_helper(rbx, rcx, rdx);
 }
 
