@@ -21,7 +21,6 @@
  * questions.
  *
  */
-
 #include "precompiled.hpp"
 #include "compiler/disassembler.hpp"
 #include "interpreter/interpreter.hpp"
@@ -31,6 +30,7 @@
 #include "interpreter/templateInterpreterGenerator.hpp"
 #include "interpreter/templateTable.hpp"
 #include "oops/methodData.hpp"
+#include "utilities/exceptions.hpp"
 
 #define __ Disassembler::hook<InterpreterMacroAssembler>(__FILE__, __LINE__, _masm)->
 
@@ -320,6 +320,11 @@ void TemplateInterpreterGenerator::set_entry_points(Bytecodes::Code code) {
     assert(t->is_valid(), "just checking");
     set_wide_entry_point(t, wep);
   }
+
+  if (code == Bytecodes::_invokevirtual) {
+    tty->print_cr("The code dispatching Bytecodes::_invokevirtual is at %p\n", fep);
+  }
+
   // set entry points
   EntryPoint entry(bep, zep, cep, sep, aep, iep, lep, fep, dep, vep);
   Interpreter::_normal_table.set_entry(code, entry);
