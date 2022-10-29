@@ -2439,7 +2439,6 @@ run:
         // QQQ Need to make this as inlined as possible. Probably need to split all the bytecode cases
         // out so c++ compiler has a chance for constant prop to fold everything possible away.
 
-  tty->print_cr("I am here about to call something.");
         if (!cache->is_resolved((Bytecodes::Code)opcode)) {
           CALL_VM(InterpreterRuntime::resolve_from_cache(THREAD, (Bytecodes::Code)opcode),
                   handle_exception);
@@ -2494,6 +2493,15 @@ run:
             }
             callee = cache->f1_as_method();
           }
+
+          {
+            // We are only going to see this output if we are running
+            // with the zero variant.
+            ResourceMark rm(THREAD);
+            char *method_name = callee->name_and_sig_as_C_string();
+            tty->print_cr("About to call %s\n", method_name);
+          }
+
 
           istate->set_callee(callee);
           istate->set_callee_entry_point(callee->from_interpreted_entry());
