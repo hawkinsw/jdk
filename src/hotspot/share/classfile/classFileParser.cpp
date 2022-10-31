@@ -5274,6 +5274,11 @@ InstanceKlass* ClassFileParser::create_instance_klass(bool changed_by_loadhook,
 
   fill_instance_klass(ik, changed_by_loadhook, cl_inst_info, CHECK_NULL);
 
+  {
+    ResourceMark rm(THREAD);
+    printf("Allocating an instance class for %s\n", ik->name()->as_C_string());
+  }
+
   assert(_klass == ik, "invariant");
 
   return ik;

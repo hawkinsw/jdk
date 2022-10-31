@@ -509,10 +509,13 @@ bool klassVtable::update_inherited_vtable(Thread* current,
         // overriding. They may also override other methods.
         if (!target_method->is_package_private()) {
           allocate_new = false;
-          ResourceMark rm(THREAD);
+          // It would be *nice* to use THREAD here, but we cannot! Why? Because
+          // THREAD is "brought in" through the TRAPS parameter in these
+          // methods and, well, we don't have that here.
+          ResourceMark rm(current);
           printf("Method is not package private: %s\n", target_method()->name()->as_C_string());
         } else {
-          ResourceMark rm(THREAD);
+          ResourceMark rm(current);
           printf("Method is package private: %s\n", target_method()->name()->as_C_string());
         }
 

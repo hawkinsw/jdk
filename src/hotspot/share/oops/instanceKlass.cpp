@@ -1378,9 +1378,9 @@ instanceOop InstanceKlass::allocate_instance(TRAPS) {
   instanceOop i;
 
   ResourceMark rm;
-  log_trace(class)("Allocating %s that is %d big.", internal_name(), size());
+  log_trace(class)("Allocating %s that is " UINTX_FORMAT " big.", internal_name(), size);
 
-  i = (instanceOop)Universe::heap()->obj_allocate(this, si, CHECK_NULL);
+  i = (instanceOop)Universe::heap()->obj_allocate(this, size, CHECK_NULL);
   if (has_finalizer_flag && !RegisterFinalizersAtInit) {
     i = register_finalizer(i, CHECK_NULL);
   }

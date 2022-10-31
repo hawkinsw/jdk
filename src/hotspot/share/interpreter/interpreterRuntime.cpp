@@ -242,6 +242,15 @@ JRT_ENTRY(void, InterpreterRuntime::_new(JavaThread* current, ConstantPool* pool
   //       because the _breakpoint bytecode would be lost.
   oop obj = klass->allocate_instance(CHECK);
   current->set_vm_result(obj);
+
+  {
+    ResourceMark rm(current);
+
+    size_t obj_size = obj->size();
+    int vtable_size = obj->klass()->vtable_length();
+    char *klass_name = klass->name()->as_C_string();
+    printf("%s, " UINTX_FORMAT ", " INT32_FORMAT "\n", klass_name, obj_size, vtable_size);
+  }
 JRT_END
 
 
